@@ -1,4 +1,5 @@
 import 'package:chatapp/screens/homePage.dart';
+import 'package:chatapp/screens/login.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: Login(haveNumber: false,),
     );
   }
 }
