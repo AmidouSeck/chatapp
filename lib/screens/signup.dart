@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:chatapp/screens/homePage.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
@@ -22,6 +23,8 @@ import 'package:steps_indicator/steps_indicator.dart';
 import '../../constants/colors/main_color.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'login.dart';
 
 enum SingingCharacter { MALE, FEMALE }
 enum ImageSourceType { gallery, camera }
@@ -302,9 +305,10 @@ class _SignupBodyState extends State<SignupBody> {
                       Navigator.pop(context);
                       _savePassword(currentTextPinOne);
                       _savePhoneNumber(number);
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (BuildContext context) =>
-                      //         PinCodeVerificationScreen(number, false, true)));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              Login(haveNumber: false,)));
+                      //print("THE RESULT: "+result);
                       return result;
                     } on SocketException catch (e) {
                       Navigator.pop(context);

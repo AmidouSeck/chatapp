@@ -65,13 +65,13 @@ class AuthService {
           await http.MultipartFile.fromPath('profilePhoto', profilePhoto.path));
     }
 
-    print("Contenu de request : $request");
+    //print("Contenu de request : $request");
     var response = await request.send();
 
     final res = await http.Response.fromStream(response);
 
-    print("res status ${res.statusCode}");
-    print("res status ${res.body}");
+    //print("res status ${res.statusCode}");
+    //print("res status ${res.body}");
     if (res.statusCode == 201)
       return res.body;
     else {

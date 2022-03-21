@@ -160,7 +160,8 @@ class _LoginBodyState extends State<LoginBody> {
           final Map<String, dynamic> parsed = json.decode(resultState);
           setState(() {
             _saveUserId(parsed['userId']);
-            _saveToken(parsed['token']);
+            _saveFirstName(parsed['firstname']);
+            _saveLastName(parsed['lastname']);
             _savePhoneNumber(parsed['phoneNumber']);
           });
 
@@ -227,9 +228,9 @@ class _LoginBodyState extends State<LoginBody> {
   static bool _dark = false;
   bool useBio = false;
 
-  _saveToken(String token) async {
+  _saveFirstName(String token) async {
     final prefs = await SharedPreferences.getInstance();
-    final key = 'token';
+    final key = 'firstname';
     final value = token;
     prefs.setString(key, value);
   }
@@ -252,6 +253,13 @@ class _LoginBodyState extends State<LoginBody> {
   _savePassword(String password) async {
     final prefs = await SharedPreferences.getInstance();
     final key = 'password';
+    final value = password;
+    prefs.setString(key, value);
+  }
+
+  _saveLastName(String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'lastname';
     final value = password;
     prefs.setString(key, value);
   }
@@ -359,7 +367,7 @@ class _LoginBodyState extends State<LoginBody> {
         final Map<String, dynamic> parsed = json.decode(resultState);
         setState(() {
           _saveUserId(parsed['userId']);
-          _saveToken(parsed['token']);
+          //_saveToken(parsed['token']);
           _savePhoneNumber(parsed['phoneNumber']);
         });
 
@@ -566,7 +574,7 @@ class _LoginBodyState extends State<LoginBody> {
           var state = result.toString().substring(0, 3);
           var resultState =
               result.toString().substring(3, result.toString().length);
-          print("state $state");
+          print("stateResult ${state.length}");
 
           if (state == "200") {
             final Map<String, dynamic> parsed = json.decode(resultState);
@@ -574,8 +582,8 @@ class _LoginBodyState extends State<LoginBody> {
             print("state ${parsed['firstname']}");
             print("state $parsed");
             setState(() {
-              _savePassword(passwordController.text);
-              _saveToken(parsed['token']);
+             // _savePassword(passwordController.text);
+              //_saveToken(parsed['token']);
               _saveUserId(parsed['userId']);
               _savePhoneNumber(parsed['phoneNumber']);
             });
@@ -600,11 +608,10 @@ class _LoginBodyState extends State<LoginBody> {
                 );
               } else {
                 Navigator.pop(context);
-                // Navigator.of(context, rootNavigator: true).pushReplacement(
-                //     MaterialPageRoute(
-                //         builder: (BuildContext context) =>
-                //             new PinCodeVerificationScreen(
-                //                 phoneNumber, false, false)));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
               }
             });
           }
@@ -636,9 +643,10 @@ class _LoginBodyState extends State<LoginBody> {
                 "Nombre de SMS autorisé par jour dépassé. Réessayer plus tard.",
                 "",
                 _dark);
-          } else {
+          } 
+          else {
             onAlertErrorButtonPressed(context, "Erreur",
-                "Numéro de téléphone ou Code Der incorrect", "", _dark);
+                "Numéro de téléphone ou Code Pin incorrect", "", _dark);
           }
         }
       }
