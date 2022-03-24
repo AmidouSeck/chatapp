@@ -280,7 +280,7 @@ class AccountHomeState extends State<AccountHome>
                             child: Text(
                               "${firstName} ${lastName}",
                               style: TextStyle(
-                                color: appMainColor(),
+                                color: kPrimaryColor,
                                 fontWeight: FontWeight.normal,
                                 fontSize: 25.0,
                               ),

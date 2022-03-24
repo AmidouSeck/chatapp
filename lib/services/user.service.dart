@@ -22,34 +22,32 @@ class UserService {
     token = value;
   }
 
-  Future<UserInterface> getUserInfo() async {
-   await _readToken();
-
-    final response = await http.get(
-        Uri.parse(apiUrl + "/users/getUserInfos"),headers: await _headersAuth(token));
-     
-     print(response.body);
-    if (response.statusCode == 201) {
-      final Map<String, dynamic> parsed = json.decode(response.body);
-      var user = UserInterface.fromJSON(parsed['user']);
-      return user;
-    } else {
-      throw Exception('Failed to load the users infos');
-    }
+  static List<UserInterface> parsedData(
+      String responseBody, String nameBody) {
+    final Map<String, dynamic> parsed = json.decode(responseBody);
+    //print("list test $parsed");
+    var listParsed = List<UserInterface>.from(
+        parsed[nameBody].map((x) => UserInterface.fromJSON(x)));
+    //print("list test $listParsed");
+    return listParsed;
   }
-   Future<UserInterface> getUserInfoNano() async {
+
+  Future<List<UserInterface>> getUsers() async {
    await _readToken();
 
     final response = await http.get(
-        Uri.parse(apiUrl + "/users/getNanoInfos"),headers: await _headersAuth(token));
+        Uri.parse(apiUrl + "/users"));
      
-     print(response.body);
+     //print(response.body);
     if (response.statusCode == 201) {
       final Map<String, dynamic> parsed = json.decode(response.body);
-      var user = UserInterface.fromJSON(parsed['user']);
-      return user;
+      //print(parsed)
+      var data = parsedData(response.body, "user");
+      //var user = UserInterface.fromJSON(data);
+      print(data.length);
+      return data;
     } else {
-      throw Exception('Failed to load the users infos');
+      throw Exception('Failed to load the users');
     }
   }
 }

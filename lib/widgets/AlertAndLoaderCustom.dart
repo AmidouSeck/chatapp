@@ -21,7 +21,7 @@ onAlertLogout(context, bool dark, token) async {
                   return CustomDialogBox(
                     title: "Déconnexion",
                     descriptions: "Voulez-vous quitter l'application",
-                    text: "Oui", img: "assets/images/launcher.png",isLogout: true, textTwo: "Non",isSuccess: false,isBio: false, number: '',
+                    text: "Oui", img: "assets/images/splash.png",isLogout: true, textTwo: "Non",isSuccess: false,isBio: false, number: '',
                   );
                   });
   

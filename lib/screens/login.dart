@@ -694,8 +694,8 @@ class _LoginBodyState extends State<LoginBody> {
                   Container(
                     alignment: Alignment.center, // use aligment
                     child: Image.asset(
-                      'assets/images/Groupe_2382.png',
-                      height: 200,
+                      'assets/images/splash.png',
+                      height: 300,
                       // width: 200,
                       fit: BoxFit.cover,
                     ),
@@ -773,7 +773,7 @@ class _LoginBodyState extends State<LoginBody> {
                                     Container(
                                       padding: EdgeInsets.only(left: 4),
                                       child: Text(
-                                        "Saisissez votre Code Der",
+                                        "Saisissez votre Code Pin",
                                         style: TextStyle(
                                             color: brownColor, fontSize: 16),
                                       ),
