@@ -189,7 +189,7 @@ Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 15, vertical: 0),
                                 child: Container(
-                                  margin: EdgeInsets.only(bottom: 20, top: 20),
+                                  margin: EdgeInsets.only(bottom: 10, top: 10),
                                   child: Text(
                                     (dateTimeAll == dateCurrent)
                                         ? "Aujourd'hui"
@@ -323,8 +323,9 @@ Widget _itemBuilder(BuildContext context, IndexPath index) {
                         ),
                       ),
                       onTap: () {
+                        print("USER2ID: "+transaction.id.toString());
                         Navigator.push(context, MaterialPageRoute(builder: (context){
-          return ChatDetailPage();
+          return ChatDetailPage(transaction.id.toString());
         }));
                       },
                     ),

@@ -1,14 +1,33 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:chatapp/services/user.service.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../constants/colors/main_color.dart';
+import '../constants/size.dart';
 import '../models/chatMessageModel.dart';
+import '../widgets/AlertAndLoaderCustom.dart';
+import '../widgets/rounded_button.dart';
 
+enum ImageSourceType { gallery, camera }
+ImagePicker picker = ImagePicker();
 class ChatDetailPage extends StatefulWidget{
+  final String user ;
+  ChatDetailPage(this.user);
+      
   @override
   _ChatDetailPageState createState() => _ChatDetailPageState();
 }
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
-
+final formKey = GlobalKey<FormState>();
+File? _imageFile;
+String user1 = "";
+TextEditingController messageController = TextEditingController();
 List<ChatMessage> messages = [
     ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
     ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
@@ -16,6 +35,39 @@ List<ChatMessage> messages = [
     ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver"),
     ChatMessage(messageContent: "Is there any thing wrong?", messageType: "sender"),
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _saveUserId();
+    
+  }
+
+  _saveUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    print("SHARED: "+prefs.get("userId").toString());
+    setState(() {
+      user1 = prefs.get("userId").toString();
+    });
+  }
+
+  Future<void> _handleURLButtonPressCamera(String typeUpload) async {
+    final XFile? photo;
+    photo = await picker.pickImage(source: ImageSource.camera, imageQuality: 9);
+    setState(() {
+      _imageFile = File(photo!.path);
+    });
+  }
+
+  Future<void> _handleURLButtonPressGallery(String typeUpload) async {
+    final XFile? photo;
+    photo =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 9);
+    setState(() {
+      _imageFile = File(photo!.path);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +110,9 @@ List<ChatMessage> messages = [
           ),
         ),
       ),
-      body: Stack(
+      body: Form(
+            key: formKey,
+      child:Stack(
         children: <Widget>[
           ListView.builder(
   itemCount: messages.length,
@@ -85,7 +139,7 @@ List<ChatMessage> messages = [
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(
-              padding: EdgeInsets.only(left: 10,bottom: 10,top: 10),
+              padding: EdgeInsets.only(left: 10,bottom: 20,top: 10),
               height: 60,
               width: double.infinity,
               color: Colors.white,
@@ -93,6 +147,43 @@ List<ChatMessage> messages = [
                 children: <Widget>[
                   GestureDetector(
                     onTap: (){
+                      showAdaptiveActionSheet(
+                        context: context,
+                        title: const Text(
+                            'Choisir le fichier'),
+                        actions: <
+                            BottomSheetAction>[
+                          BottomSheetAction(
+                              title: const Text(
+                                  'Galerie'),
+                              onPressed:
+                                  () async {
+                                Navigator.pop(
+                                    context);
+                                await _handleURLButtonPressGallery(
+                                    "gallery");
+                              }),
+                          BottomSheetAction(
+                              title: const Text(
+                                  'Caméra'),
+                              onPressed:
+                                  () async {
+                                Navigator.pop(
+                                    context);
+                                await _handleURLButtonPressCamera(
+                                    "camera");
+                              }),
+                        ],
+                        cancelAction:
+                            CancelAction(
+                                title:
+                                    const Text(
+                          'Cancel',
+                          style: TextStyle(
+                              color: Colors
+                                  .red),
+                        )), // onPressed parameter is optional by default will dismiss the ActionSheet
+                      );
                     },
                     child: Container(
                       height: 30,
@@ -107,8 +198,9 @@ List<ChatMessage> messages = [
                   SizedBox(width: 15,),
                   Expanded(
                     child: TextField(
+                      controller: messageController,
                       decoration: InputDecoration(
-                        hintText: "Write message...",
+                        hintText: "Écrire un message...",
                         hintStyle: TextStyle(color: Colors.black54),
                         border: InputBorder.none
                       ),
@@ -116,7 +208,52 @@ List<ChatMessage> messages = [
                   ),
                   SizedBox(width: 15,),
                   FloatingActionButton(
-                    onPressed: (){},
+                    onPressed: () async {
+                      
+                      //var number = indicator.phoneNumber.toString();
+                  final isValid = formKey.currentState!.validate();
+                  
+                  if (isValid) {
+                    
+                    try {
+                      //showAlertDialog(context);
+                      
+                      var result = await UserService.postMessage(
+                        messageContent: messageController.text,
+                        user1: user1,
+                        user2: widget.user,
+                        sender: user1,
+                        img: _imageFile,
+                      );
+                      //Navigator.pop(context);
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //     builder: (BuildContext context) =>
+                      //         Login(haveNumber: false,)));
+                      //print("THE RESULT: "+result);
+                      return result;
+                    } on SocketException catch (e) {
+                      Navigator.pop(context);
+                      onAlertErrorButtonPressed(
+                          context, "Erreur", "Serveur inaccessible", "", false);
+                    } catch (e) {
+                      Navigator.pop(context);
+                      final Map<String, dynamic> parsed =
+                          json.decode(e.toString().substring(11));
+                      var status = parsed['status'];
+                      if (status == 409 || status == 404) {
+                        onAlertErrorButtonPressed(
+                            context, "Erreur", parsed['message'], "", false);
+                      } else {
+                        onAlertErrorButtonPressed(
+                            context,
+                            "Échoué",
+                            "Votre opération a échoué. Veuillez réessayer plus tard.",
+                            "",
+                            false);
+                      }
+                    }
+                  }
+                    },
                     child: Icon(Icons.send,color: Colors.white,size: 18,),
                     backgroundColor: Colors.blue,
                     elevation: 0,
@@ -128,7 +265,7 @@ List<ChatMessage> messages = [
           ),
         ],
       ),
-
+      )
     );
   }
 }
