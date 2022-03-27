@@ -9,9 +9,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/colors/main_color.dart';
 import '../constants/size.dart';
+import '../interface/messageInterface.dart';
 import '../models/chatMessageModel.dart';
 import '../widgets/AlertAndLoaderCustom.dart';
-import '../widgets/rounded_button.dart';
+import "package:collection/collection.dart";
 
 enum ImageSourceType { gallery, camera }
 ImagePicker picker = ImagePicker();
@@ -25,8 +26,13 @@ class ChatDetailPage extends StatefulWidget{
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
 final formKey = GlobalKey<FormState>();
+UserService userService = new UserService();
 File? _imageFile;
 String user1 = "";
+String user2 = "";
+Future<List<MessageInterface>>? msgList;
+  Map<dynamic, List<MessageInterface>>? msgAllGrouped;
+  List<MessageInterface> msgAll = [];
 TextEditingController messageController = TextEditingController();
 List<ChatMessage> messages = [
     ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
@@ -41,14 +47,53 @@ List<ChatMessage> messages = [
     // TODO: implement initState
     super.initState();
     _saveUserId();
-    
+   
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        setState(() {
+          //waitTransaction = true;
+           _getMessages();
+        });
+      }
+    });
+  }
+
+  Future<void> _getMessages() async {
+    try {
+        msgList =  userService.getMessage(user1, user2);
+       //print("GET MESSAGE"+msgList.toString());
+       
+      print(msgList);
+      await msgList!.then((value) => {
+            msgAll = value,
+            if (mounted)
+              {
+            setState(() {
+              msgAllGrouped =
+                  groupBy(msgAll, (MessageInterface e) {
+                return e.date;
+              });
+            }),
+            },
+            //waitTransaction = true,
+          });
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+         // haveData = true;
+          msgAll = [];
+        });
+      }
+    }
   }
 
   _saveUserId() async {
     final prefs = await SharedPreferences.getInstance();
-    print("SHARED: "+prefs.get("userId").toString());
+    
     setState(() {
       user1 = prefs.get("userId").toString();
+      user2 = widget.user;
+      //print("SHARED: "+user1+" "+user2);
     });
   }
 
@@ -89,7 +134,7 @@ List<ChatMessage> messages = [
                 ),
                 SizedBox(width: 2,),
                 CircleAvatar(
-                  backgroundImage: NetworkImage("<https://randomuser.me/api/portraits/men/5.jpg>"),
+                  //backgroundImage: NetworkImage("assets/images/splash.png"),
                   maxRadius: 20,
                 ),
                 SizedBox(width: 12,),
@@ -225,10 +270,6 @@ List<ChatMessage> messages = [
                         sender: user1,
                         img: _imageFile,
                       );
-                      //Navigator.pop(context);
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (BuildContext context) =>
-                      //         Login(haveNumber: false,)));
                       //print("THE RESULT: "+result);
                       return result;
                     } on SocketException catch (e) {

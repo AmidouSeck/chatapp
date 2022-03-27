@@ -98,11 +98,11 @@ static dynamic postMessage(
   }
 
   Future<List<MessageInterface>> getMessage(String user1, String user2) async {
-
+    print("PARAMS ENDPOINT "+user1+" "+user2);
     final response = await http.get(
-        Uri.parse(apiUrl + "/chat/getmessage"));
+        Uri.parse(apiUrl + "/chat/getmessage/$user1/$user2"));
      
-     //print(response.body);
+     print(response.body);
     if (response.statusCode == 201) {
       final Map<String, dynamic> parsed = json.decode(response.body);
       //print(parsed)
