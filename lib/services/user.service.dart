@@ -36,10 +36,12 @@ class UserService {
 
   static List<MessageInterface> parsedDataMessage(
       String responseBody, String nameBody) {
+       
     final Map<String, dynamic> parsed = json.decode(responseBody);
     //print("list test $parsed");
+     //print("BEGIN PARSING $nameBody");
     var listParsed = List<MessageInterface>.from(
-        parsed[nameBody].map((x) => MessageInterface.fromJSON(x)));
+        parsed['$nameBody'].map((x) => MessageInterface.fromJSON(x)));
     //print("list test $listParsed");
     return listParsed;
   }
@@ -98,7 +100,7 @@ static dynamic postMessage(
   }
 
   Future<List<MessageInterface>> getMessage(String user1, String user2) async {
-    print("PARAMS ENDPOINT "+user1+" "+user2);
+    
     final response = await http.get(
         Uri.parse(apiUrl + "/chat/getmessage/$user1/$user2"));
      
@@ -108,7 +110,7 @@ static dynamic postMessage(
       //print(parsed)
       var data = parsedDataMessage(response.body, "message");
       //var user = UserInterface.fromJSON(data);
-      print(data.length);
+      print("LENGTH OF MSG"+data.length.toString());
       return data;
     } else {
       throw Exception('Failed to load the users messages');

@@ -6,6 +6,7 @@ class MessageInterface {
   var messageContent;
   var date;
   var time;
+  var created_at;
 
 
   MessageInterface({
@@ -15,7 +16,7 @@ class MessageInterface {
         var messageContent                     ,
         var date                 ,
         var time                     ,
-        
+        var created_at,
   })
   {
         this.user1     = user1;
@@ -24,17 +25,19 @@ class MessageInterface {
         this.messageContent       = messageContent   ;
         this.date       = date   ;
         this.time       = time   ;
+        this.created_at = created_at;
   }
 
   factory MessageInterface.fromJSON(Map<String, dynamic> json)
   {
     return MessageInterface(
-        user1    : json['message'] as int,
+        user1    : json['message'] ,
         sender     : json['sender'],
         user2   : json['receiver'],              
-        messageContent     : json['messageContent'] as String,
+        messageContent     : json['messageContent'],
         date   : json['date'],              
         time     : json['time'],
+        created_at: json['created_at']
     );
   }
 }

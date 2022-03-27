@@ -210,7 +210,7 @@ class AccountHomeState extends State<AccountHome>
                                   color: appMainColor(),
                                 ),
                                 title: Text(
-                                    "Appelez le service client gratuitement"),
+                                    "Inviter un ami à rejoindre ChatApp"),
                                 trailing: Icon(Icons.keyboard_arrow_right,
                                     color: appBackgroundColor),
                                 onTap: _callNumber,

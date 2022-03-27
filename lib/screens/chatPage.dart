@@ -26,6 +26,7 @@ Future<List<UserInterface>>? userList;
   Future<UserInterface>? userInfos;
   bool haveData = false;
   bool waitTransaction = false;
+  
 List chatUsers = [
     // ChatUsers(name: "Jane Russel", messageText: "Awesome Setup", image: "assets/images/smile_success.png", time: "Now"),
     // ChatUsers(name: "Glady's Murphy", messageText: "That's Great", image: "assets/images/smile_success.png", time: "Yesterday"),
@@ -47,8 +48,8 @@ List chatUsers = [
     try {
       userList = userService.getUsers();
       //chatUsers = userList as List<UserInterface>;
-      print("THE INFO");
-      print(userList);
+      // print("THE INFO");
+      // print(userList);
       await userList!.then((value) => {
             userAll = value,
             if (mounted)
@@ -56,7 +57,7 @@ List chatUsers = [
             setState(() {
               userAllGrouped =
                   groupBy(userAll, (UserInterface e) {
-                return e.firstname;
+                return e.created_at;
               });
             }),
             },
@@ -163,7 +164,7 @@ List chatUsers = [
   ),
 ),
 
-Padding(
+          Padding(
               padding: EdgeInsets.only(top: 100, left: 15, right: 15),
               child: Stack(children: [
                 (userAll.length > 0)
@@ -181,27 +182,32 @@ Padding(
                           groupHeaderBuilder:
                               (BuildContext context, int section) {
                             var dateFrensh = DateTime.parse(
-                                "2022-03-21T09:51:22.000Z");
-                            var dateTime = DateTime.parse("2022-03-21T09:51:22.000Z");
+                                userAllGrouped!.keys
+                                    .toList()[section]
+                                    .toString());
+                            var dateTime = DateTime.parse(userAllGrouped!.keys
+                                    .toList()[section]
+                                    .toString());
                             var dateTimeAll =
                                 dateTime.day + dateTime.month + dateTime.year;
                             return Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 15, vertical: 0),
                                 child: Container(
-                                  margin: EdgeInsets.only(bottom: 10, top: 10),
-                                  child: Text(
-                                    (dateTimeAll == dateCurrent)
-                                        ? "Aujourd'hui"
-                                        : (dateTimeAll == dateCurrent - 1)
-                                            ? "Hier"
-                                            : "${dateFrensh.day}/${dateFrensh.month}/${dateFrensh.year}",
-                                    style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.normal,
-                                        color: kPrimaryColor),
-                                  ),
-                                ));
+                                  // margin: EdgeInsets.only(bottom: 10, top: 10),
+                                  // child: Text(
+                                  //   (dateTimeAll == dateCurrent)
+                                  //       ? "Aujourd'hui"
+                                  //       : (dateTimeAll == dateCurrent - 1)
+                                  //           ? "Hier"
+                                  //           : "${dateFrensh.day}/${dateFrensh.month}/${dateFrensh.year}",
+                                  //   style: TextStyle(
+                                  //       fontSize: 12.0,
+                                  //       fontWeight: FontWeight.normal,
+                                  //       color: kPrimaryColor),
+                                  // ),
+                                )
+                                );
                           },
                           separatorBuilder: (context, index) =>
                               SizedBox(height: 5),
@@ -214,7 +220,7 @@ Padding(
                             alignment: Alignment(0.0, 0.0),
                             height: mediaHeight(context) / 2,
                             child: Text(
-                              "Pas de message",
+                              "Pas de Contact",
                               style: TextStyle(
                                   color: kPrimaryColor,
                                   fontWeight: FontWeight.bold,
@@ -323,9 +329,9 @@ Widget _itemBuilder(BuildContext context, IndexPath index) {
                         ),
                       ),
                       onTap: () {
-                        print("USER2ID: "+transaction.id.toString());
+                        //print("USER2ID: "+transaction.id.toString());
                         Navigator.push(context, MaterialPageRoute(builder: (context){
-          return ChatDetailPage(transaction.id.toString());
+          return ChatDetailPage(transaction.id.toString(), transaction.firstname, transaction.userFiles);
         }));
                       },
                     ),
