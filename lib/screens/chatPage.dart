@@ -9,6 +9,7 @@ import '../models/chatUsersModel.dart';
 import '../services/user.service.dart';
 import '../widgets/conversationList.dart';
 import 'package:group_list_view/group_list_view.dart';
+import 'package:easy_mask/easy_mask.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -99,9 +100,9 @@ List chatUsers = [
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text("Conversations",style: TextStyle(fontSize: 28,fontWeight: FontWeight.bold),),
+                    Text("Contacts",style: TextStyle(fontSize: 28,fontWeight: FontWeight.bold),),
                     Container(
-                      padding: EdgeInsets.only(left: 8,right: 8,top: 2,bottom: 2),
+                      //padding: EdgeInsets.only(left: 8,right: 8,top: 2,bottom: 2),
                       height: 30,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
@@ -109,15 +110,15 @@ List chatUsers = [
                       ),
                       child: Row(
                         children: <Widget>[
-                          Icon(Icons.add,color: Colors.pink,size: 20,),
-                          SizedBox(width: 2,),
+                          //Icon(Icons.add,color: Colors.pink,size: 20,),
+                          //SizedBox(width: 2,),
                           //Text("Ajouter",style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),),
                           ElevatedButton(
                             style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty
-                                      .all(
-                                          Colors.pink.shade100),
+                              // backgroundColor:
+                              //     MaterialStateProperty
+                              //         .all(
+                              //             Colors.pink.shade100),
                               shape: MaterialStateProperty
                                   .all<
                                       RoundedRectangleBorder>(
@@ -125,7 +126,7 @@ List chatUsers = [
                                   borderRadius:
                                       BorderRadius
                                           .circular(
-                                              18.0),
+                                              30.0),
                                 ),
                               ),
                             ),
@@ -265,6 +266,8 @@ Widget _itemBuilder(BuildContext context, IndexPath index) {
 
     UserInterface transaction =
         userAllGrouped!.values.toList()[index.section][index.index];
+        MagicMask mask = MagicMask.buildMask('99 999 99 99');
+  var formattedString = mask.getMaskedString(transaction.phoneNumber.substring(4));
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
         child: Container(
@@ -300,7 +303,7 @@ Widget _itemBuilder(BuildContext context, IndexPath index) {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "${transaction.firstname}",
+                                  "${transaction.firstname} ${transaction.lastname}",
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -309,7 +312,7 @@ Widget _itemBuilder(BuildContext context, IndexPath index) {
                                 ),
                                 SizedBox(height: 10),
                                 Text(
-                                       "${transaction.lastname}",
+                                       "${formattedString}",
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontFamily: 'Lato',

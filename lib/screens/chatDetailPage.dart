@@ -414,7 +414,7 @@ Widget _itemBuilder(BuildContext context, IndexPath index) {
     MessageInterface msg =
         msgAllGrouped!.values.toList()[index.section][index.index];
     return Container(
-      padding: EdgeInsets.only(left: 14,right: 14,top: 10,bottom: 10),
+      padding: EdgeInsets.only(left: 14,right: 14,top: 5,bottom: 5),
       child: Align(
         alignment: (msg.sender != user1?Alignment.topLeft:Alignment.topRight),
         child: Container(
@@ -422,11 +422,24 @@ Widget _itemBuilder(BuildContext context, IndexPath index) {
             borderRadius: BorderRadius.circular(20),
             color: (msg.sender  != user1?Colors.grey.shade200:Colors.blue[200]),
           ),
-          padding: EdgeInsets.all(16),
-          child: Text(msg.messageContent, style: TextStyle(fontSize: 15),),
+          padding: EdgeInsets.all(12),
+          child: Column(
+          children: [
+          Text(msg.messageContent, style: TextStyle(fontSize: 15),),
+          Container(
+           width: 150,
+            margin: EdgeInsets.only(right: 10),
+            alignment: Alignment.bottomRight,
+            child: 
+          Text(
+            msg.time,
+             style: TextStyle(fontSize: 9),
+             textAlign: TextAlign.right,),
+             )
+          ],
         ),
       ),
-    );
+    ));
   }
 
 }
