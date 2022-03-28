@@ -234,27 +234,6 @@ List chatUsers = [
                             child: CircularProgressIndicator(
                                 color: appMainColor())),
               ])),
-
-//   ListView.builder(
-    
-//   itemCount: userAllGrouped!.keys.toList().length,
-//   shrinkWrap: true,
-//   padding: EdgeInsets.only(top: 16),
-//   physics: NeverScrollableScrollPhysics(),
-//   itemBuilder: (context, index){
-//     UserInterface user =
-//         userAllGrouped!.values.toList()[index][index];
-//         print(user);
-//     return ConversationList(
-//       name: user.firstname,
-//       messageText: user.lastname,
-//       imageUrl: "assets/images/smile_success.png",
-//       time: '11:00',
-//       //chatUsers[index].time,
-//       isMessageRead: (index == 0 || index == 3)?true:false,
-//     );
-//   },
-// ),
           ],
         ),
               );
@@ -334,7 +313,7 @@ Widget _itemBuilder(BuildContext context, IndexPath index) {
                       onTap: () {
                         //print("USER2ID: "+transaction.id.toString());
                         Navigator.push(context, MaterialPageRoute(builder: (context){
-          return ChatDetailPage(transaction.id.toString(), transaction.firstname, transaction.userFiles);
+          return ChatDetailPage(transaction.id.toString(), transaction.firstname+" "+transaction.lastname, transaction.userFiles);
         }));
                       },
                     ),

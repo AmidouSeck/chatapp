@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:chatapp/screens/chatPage.dart';
 import 'package:chatapp/screens/homePage.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:convert';
@@ -345,7 +346,7 @@ class _AddContactBodyState extends State<AddContactBody> {
 
   Route _createRouteToWelcomePage() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => MyApp(),
+      pageBuilder: (context, animation, secondaryAnimation) => ChatPage(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(-1, 0.0);
         const end = Offset.zero;
@@ -693,7 +694,7 @@ class _AddContactBodyState extends State<AddContactBody> {
                                                                         () async {
                                                                       Navigator.pop(
                                                                           context);
-                                                                      await _handleURLButtonPressVersoGallery(
+                                                                       _handleURLButtonPressVersoGallery(
                                                                           "gallery");
                                                                     }),
                                                                 BottomSheetAction(
@@ -703,7 +704,7 @@ class _AddContactBodyState extends State<AddContactBody> {
                                                                         () async {
                                                                       Navigator.pop(
                                                                           context);
-                                                                      await _handleURLButtonPressVerso(
+                                                                       _handleURLButtonPressVerso(
                                                                           "camera");
                                                                     }),
                                                               ],

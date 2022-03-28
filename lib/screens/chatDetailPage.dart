@@ -208,7 +208,7 @@ List<ChatMessage> messages = [
                     children: <Widget>[
                       Text(widget.firstname,style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.w600),),
                       SizedBox(height: 6,),
-                      Text("Online",style: TextStyle(color: Colors.grey.shade600, fontSize: 13),),
+                      Text("Inactif",style: TextStyle(color: Colors.grey.shade600, fontSize: 13),),
                     ],
                   ),
                 ),
