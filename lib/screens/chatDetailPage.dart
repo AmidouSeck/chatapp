@@ -121,8 +121,44 @@ List<ChatMessage> messages = [
     final XFile? photo;
     photo =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 9);
-    setState(() {
+    setState(() async {
       _imageFile = File(photo!.path);
+      try {
+                      //showAlertDialog(context);
+                      
+                      var result = await UserService.postMessage(
+                        messageContent: messageController.text,
+                        user1: user1,
+                        user2: widget.user,
+                        sender: user1,
+                        img: _imageFile,
+                      );
+                      messageController.clear();
+                      _getMessages();
+                      //print("THE RESULT: "+result);
+                      _imageFile = null;
+                      return result;
+                    } on SocketException catch (e) {
+                      Navigator.pop(context);
+                      onAlertErrorButtonPressed(
+                          context, "Erreur", "Serveur inaccessible", "", false);
+                    } catch (e) {
+                      Navigator.pop(context);
+                      final Map<String, dynamic> parsed =
+                          json.decode(e.toString().substring(11));
+                      var status = parsed['status'];
+                      if (status == 409 || status == 404) {
+                        onAlertErrorButtonPressed(
+                            context, "Erreur", parsed['message'], "", false);
+                      } else {
+                        onAlertErrorButtonPressed(
+                            context,
+                            "Échoué",
+                            "Votre opération a échoué. Veuillez réessayer plus tard.",
+                            "",
+                            false);
+                      }
+                    }
     });
   }
 
@@ -255,28 +291,7 @@ List<ChatMessage> messages = [
                             child: CircularProgressIndicator(
                                 color: appMainColor())),
               ])),
-//           ListView.builder(
-//   itemCount: messages.length,
-//   shrinkWrap: true,
-//   padding: EdgeInsets.only(top: 10,bottom: 10),
-//   physics: NeverScrollableScrollPhysics(),
-//   itemBuilder: (context, index){
-//     return Container(
-//       padding: EdgeInsets.only(left: 14,right: 14,top: 10,bottom: 10),
-//       child: Align(
-//         alignment: (messages[index].messageType == "receiver"?Alignment.topLeft:Alignment.topRight),
-//         child: Container(
-//           decoration: BoxDecoration(
-//             borderRadius: BorderRadius.circular(20),
-//             color: (messages[index].messageType  == "receiver"?Colors.grey.shade200:Colors.blue[200]),
-//           ),
-//           padding: EdgeInsets.all(16),
-//           child: Text(messages[index].messageContent, style: TextStyle(fontSize: 15),),
-//         ),
-//       ),
-//     );
-//   },
-// ),
+
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(
@@ -425,7 +440,22 @@ Widget _itemBuilder(BuildContext context, IndexPath index) {
           padding: EdgeInsets.all(12),
           child: Column(
           children: [
-          Text(msg.messageContent, style: TextStyle(fontSize: 15),),
+            (msg.messageContent.substring(0,6) != "/Users")  
+          ?Text(msg.messageContent, style: TextStyle(fontSize: 15),)
+          :Container(
+            padding: EdgeInsets.all(0),
+            width: 150,
+            height: 150,
+            decoration: new BoxDecoration(
+              //shape: BoxShape.circle,
+              // border: Border.all(color: Colors.grey, width: 0.5),
+              image: new DecorationImage(
+                image: 
+                      new AssetImage(msg.messageContent),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: null),
           Container(
            width: 150,
             margin: EdgeInsets.only(right: 10),

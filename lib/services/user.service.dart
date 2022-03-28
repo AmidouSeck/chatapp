@@ -104,13 +104,13 @@ static dynamic postMessage(
     final response = await http.get(
         Uri.parse(apiUrl + "/chat/getmessage/$user1/$user2"));
      
-     print(response.body);
+     //print(response.body);
     if (response.statusCode == 201) {
       final Map<String, dynamic> parsed = json.decode(response.body);
       //print(parsed)
       var data = parsedDataMessage(response.body, "message");
       //var user = UserInterface.fromJSON(data);
-      print("LENGTH OF MSG"+data.length.toString());
+      //print("LENGTH OF MSG"+data.length.toString());
       return data;
     } else {
       throw Exception('Failed to load the users messages');
