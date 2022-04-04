@@ -46,11 +46,11 @@ class UserService {
     return listParsed;
   }
 
-  Future<List<UserInterface>> getUsers() async {
+  Future<List<UserInterface>> getUsers(String user1) async {
    await _readToken();
 
     final response = await http.get(
-        Uri.parse(apiUrl + "/users"));
+        Uri.parse(apiUrl + "/users/all/$user1"));
      
      //print(response.body);
     if (response.statusCode == 201) {

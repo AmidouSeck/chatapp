@@ -2,6 +2,7 @@ import 'package:chatapp/screens/addContact.dart';
 import 'package:chatapp/screens/chatDetailPage.dart';
 import 'package:flutter/material.dart';
 import "package:collection/collection.dart";
+import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors/main_color.dart';
 import '../constants/size.dart';
 import '../interface/userInterface.dart';
@@ -27,7 +28,7 @@ Future<List<UserInterface>>? userList;
   Future<UserInterface>? userInfos;
   bool haveData = false;
   bool waitTransaction = false;
-  
+  String user1 = "";
 List chatUsers = [
     // ChatUsers(name: "Jane Russel", messageText: "Awesome Setup", image: "assets/images/smile_success.png", time: "Now"),
     // ChatUsers(name: "Glady's Murphy", messageText: "That's Great", image: "assets/images/smile_success.png", time: "Yesterday"),
@@ -43,11 +44,20 @@ List chatUsers = [
 
     dateCurrent = now.day + now.month + now.year;
   }
+
+  _saveUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    
+    setState(() {
+      user1 = prefs.get("userId").toString();
+      print("SHARED: "+user1);
+    });
+  }
   
 
   Future<void> _getUsers() async {
     try {
-      userList = userService.getUsers();
+      userList = userService.getUsers(user1);
       //chatUsers = userList as List<UserInterface>;
       // print("THE INFO");
       // print(userList);
@@ -78,6 +88,7 @@ List chatUsers = [
   void initState() {
     // TODO: implement initState
     super.initState();
+    _saveUserId();
   mainDateCurrent();
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
